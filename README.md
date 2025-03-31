@@ -2,6 +2,83 @@
 
 Este proyecto demuestra cómo configurar varios métodos de autoescalado en un clúster de Kubernetes, específicamente utilizando **Horizontal Pod Autoscaler (HPA)**, **Vertical Pod Autoscaler (VPA)** y **KEDA** (Kubernetes Event-Driven Autoscaler). Cada uno de estos métodos tiene sus características y casos de uso ideales para gestionar el escalado de aplicaciones de manera eficiente según el consumo de recursos y eventos.
 
+## **¿Qué es Kubernetes?**
+
+Kubernetes es una plataforma de orquestación de contenedores de código abierto diseñada para automatizar el despliegue, la escalabilidad y la gestión de aplicaciones en contenedores. Fue originalmente desarrollado por Google y ahora es mantenido por la Cloud Native Computing Foundation (CNCF). Kubernetes permite a los desarrolladores y equipos de operaciones gestionar aplicaciones de manera eficiente en entornos distribuidos, proporcionando características como:
+
+- **Escalabilidad automática:** Ajusta dinámicamente los recursos según la carga de trabajo.
+- **Alta disponibilidad:** Garantiza que las aplicaciones estén siempre disponibles mediante la replicación y la recuperación automática.
+- **Despliegue continuo:** Facilita la implementación y actualización de aplicaciones sin tiempo de inactividad.
+- **Gestión de recursos:** Optimiza el uso de recursos como CPU y memoria en el clúster.
+
+### **Estructura de un Clúster de Kubernetes**
+
+Un clúster de Kubernetes está compuesto por varios componentes que trabajan juntos para gestionar las aplicaciones y los recursos. Estos componentes se dividen en dos categorías principales: **Plano de control (Control Plane)** y **Nodos de trabajo (Worker Nodes)**.
+
+#### **1. Plano de Control (Control Plane)**
+
+El plano de control es responsable de gestionar el estado del clúster y coordinar las operaciones. Incluye los siguientes componentes:
+
+- **API Server:** Es el punto de entrada para todas las interacciones con el clúster. Los usuarios, herramientas y otros componentes se comunican con Kubernetes a través de la API Server.
+- **Etcd:** Es una base de datos distribuida que almacena toda la información del estado del clúster, como la configuración y los metadatos.
+- **Controller Manager:** Ejecuta los controladores que supervisan el estado del clúster y realizan acciones correctivas, como escalar aplicaciones o reiniciar pods fallidos.
+- **Scheduler:** Asigna los pods a los nodos de trabajo según los recursos disponibles y las restricciones definidas.
+
+#### **2. Nodos de Trabajo (Worker Nodes)**
+
+Los nodos de trabajo son los servidores donde se ejecutan las aplicaciones en contenedores. Cada nodo incluye los siguientes componentes:
+
+- **Kubelet:** Es un agente que se ejecuta en cada nodo y se comunica con el plano de control para garantizar que los contenedores estén en ejecución según lo especificado.
+- **Kube-proxy:** Gestiona las reglas de red para permitir la comunicación entre los servicios y los pods.
+- **Motor de contenedores:** Es el software que ejecuta los contenedores, como Docker o containerd.
+
+#### **3. Recursos de Kubernetes**
+
+Kubernetes utiliza varios recursos para gestionar las aplicaciones y los servicios. Algunos de los más importantes son:
+
+- **Pods:** Son la unidad más pequeña de Kubernetes y representan uno o más contenedores que comparten recursos como almacenamiento y red.
+- **Deployments:** Gestionan el ciclo de vida de los pods, permitiendo actualizaciones y escalado.
+- **Services:** Exponen los pods para que puedan ser accesibles dentro o fuera del clúster.
+- **ConfigMaps y Secrets:** Gestionan la configuración y las credenciales de las aplicaciones.
+- **Namespaces:** Permiten organizar y aislar recursos dentro del clúster.
+
+### **Diagrama de un Clúster de Kubernetes**
+
+```plaintext
++---------------------------+
+|       Control Plane       |
+|                           |
+|  +---------------------+  |
+|  |      API Server     |  |
+|  +---------------------+  |
+|  |       Etcd          |  |
+|  +---------------------+  |
+|  | Controller Manager  |  |
+|  +---------------------+  |
+|  |      Scheduler      |  |
+|  +---------------------+  |
++---------------------------+
+            |
+            v
++---------------------------+
+|       Worker Nodes        |
+|                           |
+|  +---------------------+  |
+|  |       Kubelet       |  |
+|  +---------------------+  |
+|  |      Kube-proxy     |  |
+|  +---------------------+  |
+|  | Container Runtime   |  |
+|  +---------------------+  |
+|                           |
+|  +---------------------+  |
+|  |        Pods         |  |
+|  +---------------------+  |
++---------------------------+
+```
+
+Con esta estructura, Kubernetes garantiza que las aplicaciones sean escalables, resilientes y fáciles de gestionar en entornos distribuidos.
+
 ## **Objetivos del Proyecto**
 
 - **Horizontal Pod Autoscaler (HPA):** Escalar el número de réplicas de un pod en función de métricas como el uso de CPU o memoria. Ideal para escalar aplicaciones con cargas de trabajo que requieren más réplicas conforme aumentan las solicitudes.
